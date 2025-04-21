@@ -8,7 +8,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { AntDesign, Entypo } from '@expo/vector-icons';
+import { AntDesign, Entypo, FontAwesome5 } from '@expo/vector-icons';
 
 export default function HomeScreen() {
   const [task, setTask] = useState('');
@@ -83,7 +83,7 @@ export default function HomeScreen() {
   const toggleState = () => {
       if(state === false){
         setState(true),
-        setColor('black')
+        setColor('[#314C1C]')
       } else{
         setState(false),
         setColor('none')
@@ -94,10 +94,7 @@ export default function HomeScreen() {
 
   return (
     <View style={twc`relative h-full bg-gray-100`}>
-      <View style={twc`bg-sky-400 w-120 h-30 rounded-b-full absolute -right-8`}/>
-
-      <View style={twc`h-70 w-70 rounded-full absolute bg-sky-500/30 -left-55 top-90`}/>
-      <View style={twc`h-70 w-70 rounded-full absolute bg-sky-400/20 -right-60 top-105`}/>
+      <View style={twc`bg-[#032A4E] w-120 h-30 rounded-b-full absolute -right-8`}/>
 
       <TouchableOpacity style={twc`absolute right-7 bottom-7 bg-sky-400 w-12 h-12 justify-center items-center rounded-full z-999912`} onPress={edit ? handleEdit : addTask}>
         <Text style={twc`text-white font-bold text-2xl`}>+</Text>
@@ -105,43 +102,42 @@ export default function HomeScreen() {
 
       <SafeAreaView style={twc``}>
         <View style={twc`px-5 flex-row items-center justify-between`}>
-          <AntDesign name='arrowleft' size={20}/>
-          <Entypo name='dots-three-vertical' size={20}/>
+          <AntDesign name='arrowleft' size={20} style={twc`text-white`}/>
+          <Entypo name='dots-three-vertical' size={20} style={twc`text-white`}/>
         </View>
 
         <View style={twc`flex flex-row items-center justify-between px-5 my-2 mt-18`}>
           <TextInput value={task} onChangeText={setTask} placeholder='Tambahkan Tugas' placeholderTextColor="rgb(71, 71, 71)" style={twc`border border-gray-300 px-4 w-80 bg-white`}/>
-          <Button title={edit ? 'Edit' : 'Add'} onPress={edit ? handleEdit : addTask}/>
-        </View>
-
-        <View style={twc`flex-row items-center gap-5 mx-3 mt-5 mb-6 left-14`}>
-          <Image source={require('@/assets/images/gray-user.png')} style={twc`w-16 h-16`}/>
-          <View>
-            <Text style={twc`text-gray-700 font-medium`}>Personal</Text>
-            <Text style={twc`text-2xl font-medium -mt-1`}>Personal</Text>
-          </View>
+          <TouchableOpacity style={twc`bg-[#032A4E] w-10 h-9.5`} onPress={edit ? handleEdit : addTask}>
+            <Text style={twc`text-3xl text-white text-center`}>+</Text>
+          </TouchableOpacity>
         </View>
 
         <FlatList
           data={list}
           keyExtractor={item => item.id}
+          ListHeaderComponent={
+            <View style={twc`px-5 my-1`}>
+              <Text style={twc`text-gray-700 font-bold text-base`}>TO DO  </Text>
+            </View>
+          }
           renderItem={({item}) => (
-            <View style={twc`mx-5 px-3 py-3 flex-row items-center justify-between bg-white mb-1 shadow`}>
+            <TouchableOpacity style={twc`mx-5 px-4 py-3 flex-row items-center justify-between bg-white mb-1 shadow`} onPress={toggleState}>
               <View style={twc`flex-row items-center gap-3`}>
-                <TouchableOpacity style={twc`bg-${color} border border-gray-700 w-4 h-4 rounded items-center justify-center`} onPress={toggleState}>
-                  <Entypo name='check' style={twc`text-white`}/>
+                <TouchableOpacity style={twc`w-6 h-6 border border-gray-400 bg-${color} rounded items-center justify-center`} onPress={toggleState}>
+                  <AntDesign name='check' size={18} style={twc`text-gray-50`}/>
                 </TouchableOpacity>
                 <Text style={twc`text-base`}>{item.title}</Text>
               </View>
               <View style={twc`flex-row items-center gap-2`}>
-                <TouchableOpacity onPress={() => startEdit(item)}>
-                  <Text style={twc`text-blue-500`}>Edit</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => delTask(item.id)}>
-                  <Text style={twc`text-red-500`}>Delete</Text>
-                </TouchableOpacity>
+              <TouchableOpacity onPress={() => startEdit(item)} style={twc`bg-[#032A4E] w-10 h-10 items-center justify-center rounded-lg`}>
+                <FontAwesome5 name='pen' style={twc`text-white`} size={18}/>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => delTask(item.id)} style={twc`bg-[#8B1A10] w-10 h-10 items-center justify-center rounded-lg`}>
+                <FontAwesome5 name='trash-alt' style={twc`text-white`} size={18}/>
+              </TouchableOpacity>
               </View>
-            </View>
+            </TouchableOpacity>
           )}
         />
       </SafeAreaView>
